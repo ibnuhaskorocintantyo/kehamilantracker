@@ -7,7 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Format date to a readable string (e.g., "June 15, 2023")
-export function formatDate(date: Date | string): string {
+export function formatDate(date: Date | string | null): string {
+  if (!date) return '';
   const dateObj = typeof date === "string" ? new Date(date) : date;
   return format(dateObj, "MMMM d, yyyy");
 }

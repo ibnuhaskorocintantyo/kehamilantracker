@@ -19,11 +19,11 @@ export default function CycleTracking() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
-  const { data: user, isLoading: isUserLoading } = useQuery({
+  const { data: user, isLoading: isUserLoading } = useQuery<User>({
     queryKey: ['/api/users/1'],
   });
   
-  const { data: cycles, isLoading: isCyclesLoading } = useQuery({
+  const { data: cycles, isLoading: isCyclesLoading } = useQuery<Cycle[]>({
     queryKey: ['/api/users/1/cycles'],
     enabled: !!user,
   });
@@ -36,7 +36,7 @@ export default function CycleTracking() {
     daysOfWeek, 
     previousMonth, 
     nextMonth 
-  } = useCalendar(currentDate, cycles);
+  } = useCalendar(currentDate, cycles as Cycle[] | undefined);
   
   const isLoading = isUserLoading || isCyclesLoading;
   
@@ -46,15 +46,19 @@ export default function CycleTracking() {
   // Add mutation for toggling pregnancy status
   const togglePregnancyMutation = useMutation({
     mutationFn: async () => {
+      if (!user) return null;
+      
       const updatedUser = {
         ...user,
-        pregnancyStatus: !user?.pregnancyStatus
+        pregnancyStatus: !user.pregnancyStatus
       };
-      await apiRequest('PATCH', `/api/users/${user?.id}`, updatedUser);
+      await apiRequest('PATCH', `/api/users/${user.id}`, updatedUser);
       return updatedUser;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}`] });
+      if (!user) return;
+      
+      queryClient.invalidateQueries({ queryKey: [`/api/users/${user.id}`] });
       queryClient.invalidateQueries({ queryKey: ['/api/users/1'] });
     },
   });
@@ -63,7 +67,7 @@ export default function CycleTracking() {
   if (user?.pregnancyStatus) {
     return (
       <PregnancyMode 
-        previousCycles={cycles || []} 
+        previousCycles={cycles as Cycle[] || []} 
         onExitPregnancyMode={() => togglePregnancyMutation.mutate()}
       />
     );
