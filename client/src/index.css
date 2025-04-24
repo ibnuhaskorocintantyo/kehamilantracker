@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 98%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 278 82% 92%;
+  --primary-foreground: 280 91% 40%;
+  --primary-dark: 286 51% 75%;
+  --secondary: 32 100% 85%;
+  --secondary-foreground: 30 95% 60%;
+  --secondary-dark: 27 100% 78%;
+  --accent: 336 100% 87%;
+  --accent-foreground: 336 80% 58%;
+  --accent-dark: 336 100% 77%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.5rem;
+  
+  /* Additional custom colors for the app */
+  --neutral-white: 60 33% 96%;
+  --neutral-light: 0 0% 90%;
+  --neutral-medium: 0 0% 62%;
+  --neutral-dark: 0 0% 29%;
+  
+  --status-success: 120 25% 75%;
+  --status-warning: 39 100% 85%;
+  --status-error: 350 100% 91%;
+  
+  --chart-1: 271 76% 53%;
+  --chart-2: 25 100% 77%;
+  --chart-3: 336 100% 77%;
+  --chart-4: 205 100% 71%;
+  --chart-5: 120 25% 75%;
+  
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 20 14.3% 4.1%;
+  --sidebar-primary: 271 76% 53%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 60 4.8% 95.9%;
+  --sidebar-accent-foreground: 24 9.8% 10%;
+  --sidebar-border: 20 5.9% 90%;
+  --sidebar-ring: 20 14.3% 4.1%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 278 82% 92%;
+  --primary-foreground: 280 91% 40%;
+  --primary-dark: 286 51% 75%;
+  --secondary: 32 100% 85%;
+  --secondary-foreground: 30 95% 60%;
+  --secondary-dark: 27 100% 78%;
+  --accent: 336 100% 87%;
+  --accent-foreground: 336 80% 58%;
+  --accent-dark: 336 100% 77%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-neutral-white text-neutral-dark font-sans antialiased;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lora', serif;
+  }
+}
+
+/* Custom calendar styling */
+.calendar-day {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.calendar-day:hover {
+  background-color: hsl(var(--primary));
+}
+.calendar-day.period {
+  background-color: hsl(var(--accent));
+  color: white;
+}
+.calendar-day.fertile {
+  background-color: hsl(var(--primary));
+  color: white;
+}
+.calendar-day.ovulation {
+  background-color: hsl(var(--primary-dark));
+  color: white;
+}
+
+/* Custom progress bar styling */
+.progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background-color: hsl(var(--neutral-light));
+  overflow: hidden;
+}
+.progress-value {
+  height: 100%;
+  border-radius: 4px;
+  background-color: hsl(var(--primary));
+  transition: width 0.3s ease;
+}
+
+/* Timeline styling */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 17px;
+  top: 30px;
+  bottom: 0;
+  width: 2px;
+  background-color: hsl(var(--primary));
+}
+.timeline-item:last-child::before {
+  display: none;
+}
+.timeline-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Dashboard grid for larger screens */
+@media (min-width: 768px) {
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
