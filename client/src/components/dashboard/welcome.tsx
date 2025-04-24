@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { calculatePregnancyWeek } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function DashboardWelcome() {
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['/api/users/1'],
-  });
+  const { user, isLoading } = useAuth();
   
   if (isLoading) {
     return (

@@ -1,7 +1,16 @@
 import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut, User } from "lucide-react";
 
 export default function Header() {
   const [location] = useLocation();
+  const { user, logoutMutation } = useAuth();
   
   return (
     <header className="bg-white shadow-soft py-4 px-4 sticky top-0 z-10">
@@ -40,9 +49,38 @@ export default function Header() {
           </Link>
         </div>
         <div className="flex items-center">
-          <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer">
-            <i className="ri-user-line text-white"></i>
-          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer">
+                <User className="h-4 w-4 text-white" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {user ? (
+                <>
+                  <DropdownMenuItem className="font-medium">
+                    {user.name || user.username}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => logoutMutation.mutate()}
+                    disabled={logoutMutation.isPending}
+                    className="text-red-500 focus:text-red-500"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <DropdownMenuItem asChild>
+                  <Link href="/auth">
+                    <a className="flex cursor-default items-center">
+                      Log in
+                    </a>
+                  </Link>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
