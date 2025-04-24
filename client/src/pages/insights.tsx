@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import MobileNavigation from "@/components/layout/mobile-navigation";
@@ -172,7 +172,7 @@ export default function Insights() {
   const COLORS = ['#D8C6F0', '#FFCDB2', '#FFAFCC', '#A9D6AF'];
   
   // Load recommendations when user data is available
-  React.useEffect(() => {
+  useEffect(() => {
     if (user && recommendations.length === 0 && !isLoadingRecommendations) {
       loadRecommendations();
     }
