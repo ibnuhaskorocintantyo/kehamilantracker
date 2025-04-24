@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { 
   Dialog,
   DialogContent,
   DialogHeader, 
-  DialogTitle,
-  DialogTrigger 
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import CycleForm from "@/components/forms/cycle-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCalendar } from "@/hooks/use-calendar";
+import PregnancyMode from "./pregnancy-mode";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Baby } from "lucide-react";
+import { User, Cycle } from "@shared/schema";
 
 export default function CycleTracking() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -40,10 +43,30 @@ export default function CycleTracking() {
   if (isLoading) {
     return <Skeleton className="bg-white rounded-xl shadow-soft h-72 w-full mb-8" />;
   }
+  // Add mutation for toggling pregnancy status
+  const togglePregnancyMutation = useMutation({
+    mutationFn: async () => {
+      const updatedUser = {
+        ...user,
+        pregnancyStatus: !user?.pregnancyStatus
+      };
+      await apiRequest('PATCH', `/api/users/${user?.id}`, updatedUser);
+      return updatedUser;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}`] });
+      queryClient.invalidateQueries({ queryKey: ['/api/users/1'] });
+    },
+  });
   
-  // Don't show cycle tracking if user is pregnant
+  // Show pregnancy mode if user is pregnant
   if (user?.pregnancyStatus) {
-    return null;
+    return (
+      <PregnancyMode 
+        previousCycles={cycles || []} 
+        onExitPregnancyMode={() => togglePregnancyMutation.mutate()}
+      />
+    );
   }
 
   const handleDateClick = (date: Date) => {
@@ -55,13 +78,23 @@ export default function CycleTracking() {
     <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-lora text-xl font-medium text-neutral-dark">Calendar</h3>
-        <Button 
-          variant="ghost" 
-          className="text-primary text-sm font-medium"
-        >
-          <i className="ri-calendar-line mr-1"></i>
-          View All
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            className="text-primary text-sm font-medium hover:text-primary-dark"
+            onClick={() => togglePregnancyMutation.mutate()}
+          >
+            <Baby className="h-4 w-4 mr-1" />
+            Activate Pregnancy Mode
+          </Button>
+          <Button 
+            variant="ghost" 
+            className="text-primary text-sm font-medium"
+          >
+            <i className="ri-calendar-line mr-1"></i>
+            View All
+          </Button>
+        </div>
       </div>
       <div className="mb-4">
         <div className="flex justify-between items-center mb-3">
