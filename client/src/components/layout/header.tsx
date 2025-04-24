@@ -13,37 +13,47 @@ export default function Header() {
   const { user, logoutMutation } = useAuth();
   
   return (
-    <header className="bg-white shadow-soft py-4 px-4 sticky top-0 z-10">
+    <header className="bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 shadow-soft py-4 px-4 sticky top-0 z-10">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <span className="text-primary-dark text-2xl mr-2">
+          <span className="text-primary text-2xl mr-2">
             <i className="ri-seedling-line"></i>
           </span>
-          <h1 className="font-lora font-bold text-xl text-neutral-dark">Bloom</h1>
+          <h1 className="font-lora font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Bloom</h1>
         </div>
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/">
-            <a className={`font-poppins ${location === '/' ? 'text-primary-dark' : 'text-neutral-dark'} hover:text-primary-dark transition`}>
+            <a className={`font-poppins font-medium ${location === '/' 
+              ? 'text-primary bg-primary/10 px-3 py-1 rounded-full' 
+              : 'text-neutral-dark hover:text-primary hover:bg-primary/5 px-3 py-1 rounded-full'} transition-all duration-200`}>
               Home
             </a>
           </Link>
           <Link href="/cycle">
-            <a className={`font-poppins ${location === '/cycle' ? 'text-primary-dark' : 'text-neutral-dark'} hover:text-primary-dark transition`}>
+            <a className={`font-poppins font-medium ${location === '/cycle' 
+              ? 'text-secondary bg-secondary/10 px-3 py-1 rounded-full' 
+              : 'text-neutral-dark hover:text-secondary hover:bg-secondary/5 px-3 py-1 rounded-full'} transition-all duration-200`}>
               Cycle
             </a>
           </Link>
           <Link href="/insights">
-            <a className={`font-poppins ${location === '/insights' ? 'text-primary-dark' : 'text-neutral-dark'} hover:text-primary-dark transition`}>
+            <a className={`font-poppins font-medium ${location === '/insights' 
+              ? 'text-accent bg-accent/10 px-3 py-1 rounded-full' 
+              : 'text-neutral-dark hover:text-accent hover:bg-accent/5 px-3 py-1 rounded-full'} transition-all duration-200`}>
               Insights
             </a>
           </Link>
           <Link href="/journal">
-            <a className={`font-poppins ${location === '/journal' ? 'text-primary-dark' : 'text-neutral-dark'} hover:text-primary-dark transition`}>
+            <a className={`font-poppins font-medium ${location === '/journal' 
+              ? 'text-primary bg-primary/10 px-3 py-1 rounded-full' 
+              : 'text-neutral-dark hover:text-primary hover:bg-primary/5 px-3 py-1 rounded-full'} transition-all duration-200`}>
               Journal
             </a>
           </Link>
           <Link href="/resources">
-            <a className={`font-poppins ${location === '/resources' ? 'text-primary-dark' : 'text-neutral-dark'} hover:text-primary-dark transition`}>
+            <a className={`font-poppins font-medium ${location === '/resources' 
+              ? 'text-secondary bg-secondary/10 px-3 py-1 rounded-full' 
+              : 'text-neutral-dark hover:text-secondary hover:bg-secondary/5 px-3 py-1 rounded-full'} transition-all duration-200`}>
               Resources
             </a>
           </Link>
@@ -51,7 +61,7 @@ export default function Header() {
         <div className="flex items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer">
+              <button className="w-9 h-9 bg-gradient-to-br from-primary via-accent to-secondary rounded-full flex items-center justify-center cursor-pointer shadow-sm hover:shadow-md transition-all duration-200">
                 <User className="h-4 w-4 text-white" />
               </button>
             </DropdownMenuTrigger>
