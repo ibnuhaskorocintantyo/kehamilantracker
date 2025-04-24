@@ -12,8 +12,12 @@ import {
   insertResourceSchema,
   insertMedicalRecordSchema
 } from "@shared/schema";
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication routes
+  setupAuth(app);
+  
   // All routes are prefixed with /api
   
   // User routes
