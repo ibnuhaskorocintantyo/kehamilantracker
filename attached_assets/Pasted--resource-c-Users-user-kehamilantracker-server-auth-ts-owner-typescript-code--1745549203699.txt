@@ -1,0 +1,56 @@
+[{
+	"resource": "/c:/Users/user/kehamilantracker/server/auth.ts",
+	"owner": "typescript",
+	"code": "2310",
+	"severity": 8,
+	"message": "Type 'User' recursively references itself as a base type.",
+	"source": "ts",
+	"startLineNumber": 17,
+	"startColumn": 15,
+	"endLineNumber": 17,
+	"endColumn": 19
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/auth.ts",
+	"owner": "typescript",
+	"code": "2769",
+	"severity": 8,
+	"message": "No overload matches this call.\n  Overload 1 of 4, '(fn: (user: User, done: (err: any, id?: unknown) => void) => void): void', gave the following error.\n    Argument of type '(user: { id: number; username: string; password: string; name: string; email: string; pregnancyStatus: boolean | null; pregnancyWeek: number | null; dueDate: string | null; }, done: (err: any, id?: unknown) => void) => void' is not assignable to parameter of type '(user: User, done: (err: any, id?: unknown) => void) => void'.\n      Types of parameters 'user' and 'user' are incompatible.\n        Type 'User' is missing the following properties from type '{ id: number; username: string; password: string; name: string; email: string; pregnancyStatus: boolean | null; pregnancyWeek: number | null; dueDate: string | null; }': id, username, password, name, and 4 more.\n  Overload 2 of 4, '(fn: (req: IncomingMessage, user: User, done: (err: any, id?: unknown) => void) => void): void', gave the following error.\n    Argument of type '(user: { id: number; username: string; password: string; name: string; email: string; pregnancyStatus: boolean | null; pregnancyWeek: number | null; dueDate: string | null; }, done: (err: any, id?: unknown) => void) => void' is not assignable to parameter of type '(req: IncomingMessage, user: User, done: (err: any, id?: unknown) => void) => void'.\n      Types of parameters 'user' and 'req' are incompatible.\n        Type 'IncomingMessage' is missing the following properties from type '{ id: number; username: string; password: string; name: string; email: string; pregnancyStatus: boolean | null; pregnancyWeek: number | null; dueDate: string | null; }': id, username, password, name, and 4 more.",
+	"source": "ts",
+	"startLineNumber": 81,
+	"startColumn": 26,
+	"endLineNumber": 81,
+	"endColumn": 49
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/auth.ts",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'err' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 126,
+	"startColumn": 37,
+	"endLineNumber": 126,
+	"endColumn": 40
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/auth.ts",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'user' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 126,
+	"startColumn": 42,
+	"endLineNumber": 126,
+	"endColumn": 46
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/auth.ts",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'info' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 126,
+	"startColumn": 48,
+	"endLineNumber": 126,
+	"endColumn": 52
+}]
