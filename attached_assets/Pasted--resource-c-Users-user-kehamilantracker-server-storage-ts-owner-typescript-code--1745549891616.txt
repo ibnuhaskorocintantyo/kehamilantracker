@@ -1,0 +1,78 @@
+[{
+	"resource": "/c:/Users/user/kehamilantracker/server/storage.ts",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'count' does not exist on type 'QueryResult<never>'.",
+	"source": "ts",
+	"startLineNumber": 166,
+	"startColumn": 19,
+	"endLineNumber": 166,
+	"endColumn": 24
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/storage.ts",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'count' does not exist on type 'QueryResult<never>'.",
+	"source": "ts",
+	"startLineNumber": 202,
+	"startColumn": 19,
+	"endLineNumber": 202,
+	"endColumn": 24
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/storage.ts",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'count' does not exist on type 'QueryResult<never>'.",
+	"source": "ts",
+	"startLineNumber": 230,
+	"startColumn": 19,
+	"endLineNumber": 230,
+	"endColumn": 24
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/storage.ts",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'count' does not exist on type 'QueryResult<never>'.",
+	"source": "ts",
+	"startLineNumber": 258,
+	"startColumn": 19,
+	"endLineNumber": 258,
+	"endColumn": 24
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/storage.ts",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'count' does not exist on type 'QueryResult<never>'.",
+	"source": "ts",
+	"startLineNumber": 292,
+	"startColumn": 19,
+	"endLineNumber": 292,
+	"endColumn": 24
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/storage.ts",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'count' does not exist on type 'QueryResult<never>'.",
+	"source": "ts",
+	"startLineNumber": 320,
+	"startColumn": 19,
+	"endLineNumber": 320,
+	"endColumn": 24
+},{
+	"resource": "/c:/Users/user/kehamilantracker/server/storage.ts",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'count' does not exist on type 'QueryResult<never>'.",
+	"source": "ts",
+	"startLineNumber": 348,
+	"startColumn": 19,
+	"endLineNumber": 348,
+	"endColumn": 24
+}]
