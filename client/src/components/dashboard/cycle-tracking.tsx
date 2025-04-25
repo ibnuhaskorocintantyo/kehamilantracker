@@ -102,19 +102,15 @@ export default function CycleTracking() {
   // Mutation for toggling pregnancy status
   const togglePregnancyMutation = useMutation({
     mutationFn: async () => {
-      if (!user) return null;
-      
       const updatedUser = {
-        ...user,
-        pregnancyStatus: !user.pregnancyStatus
+        ...user!,
+        pregnancyStatus: !user?.pregnancyStatus
       };
-      await apiRequest('PATCH', `/api/users/${user.id}`, updatedUser);
+      await apiRequest('PATCH', `/api/users/${user!.id}`, updatedUser);
       return updatedUser;
     },
     onSuccess: () => {
-      if (!user) return;
-      
-      queryClient.invalidateQueries({ queryKey: [`/api/users/${user.id}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}`] });
       queryClient.invalidateQueries({ queryKey: ['/api/users/1'] });
     },
   });
