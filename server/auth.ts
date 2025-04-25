@@ -64,7 +64,7 @@ export function setupAuth(app: Express) {
     new LocalStrategy(async (username, password, done) => {
       try {
         const [user] = await db.select().from(users).where(eq(users.username, username));
-        
+
         if (!user || !(await comparePasswords(password, user.password))) {
           return done(null, false);
         } else {
@@ -77,7 +77,7 @@ export function setupAuth(app: Express) {
   );
 
   passport.serializeUser((user: Express.User, done) => done(null, user.id));
-  
+
   passport.deserializeUser(async (id: number, done) => {
     try {
       const [user] = await db.select().from(users).where(eq(users.id, id));
@@ -90,13 +90,13 @@ export function setupAuth(app: Express) {
   app.post("/api/register", async (req, res, next) => {
     try {
       const [existingUser] = await db.select().from(users).where(eq(users.username, req.body.username));
-      
+
       if (existingUser) {
         return res.status(400).json({ error: "Username already exists" });
       }
 
       const hashedPassword = await hashPassword(req.body.password);
-      
+
       const [user] = await db.insert(users).values({
         ...req.body,
         password: hashedPassword,
@@ -115,7 +115,7 @@ export function setupAuth(app: Express) {
     passport.authenticate("local", (err: any, user: Express.User | false, info: any) => {
       if (err) return next(err);
       if (!user) return res.status(401).json({ error: "Invalid username or password" });
-      
+
       req.login(user, (err) => {
         if (err) return next(err);
         return res.status(200).json(user);
