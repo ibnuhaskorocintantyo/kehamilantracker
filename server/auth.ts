@@ -12,7 +12,16 @@ import { pool } from "./db";
 
 declare global {
   namespace Express {
-    interface User extends User {}
+    interface User {
+      id: number;
+      username: string;
+      password: string;
+      name: string;
+      email: string;
+      pregnancyStatus: boolean | null;
+      pregnancyWeek: number | null;
+      dueDate: string | null;
+    }
   }
 }
 
@@ -67,7 +76,7 @@ export function setupAuth(app: Express) {
     }),
   );
 
-  passport.serializeUser((user, done) => done(null, user.id));
+  passport.serializeUser((user: Express.User, done) => done(null, user.id));
   
   passport.deserializeUser(async (id: number, done) => {
     try {
@@ -103,7 +112,7 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: any, user: Express.User | false, info: any) => {
       if (err) return next(err);
       if (!user) return res.status(401).json({ error: "Invalid username or password" });
       
