@@ -105,8 +105,30 @@ export default function CycleTracking() {
   if (isLoading) {
     return <Skeleton className="bg-white rounded-xl shadow-soft h-72 w-full mb-8" />;
   }
+<<<<<<< HEAD
 
   if (userError) {
+=======
+  
+  // Mutation for toggling pregnancy status
+  const togglePregnancyMutation = useMutation({
+    mutationFn: async () => {
+      const updatedUser = {
+        ...user!,
+        pregnancyStatus: !user?.pregnancyStatus
+      };
+      await apiRequest('PATCH', `/api/users/${user!.id}`, updatedUser);
+      return updatedUser;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}`] });
+      queryClient.invalidateQueries({ queryKey: ['/api/users/1'] });
+    },
+  });
+  
+  // Show pregnancy mode if user is pregnant
+  if (user?.pregnancyStatus) {
+>>>>>>> 00787f40ac733d5d3bd4a0a2b03a7aad3f36c639
     return (
       <div className="bg-white rounded-xl shadow-soft p-6 mb-8 text-red-500">
         Error loading user data
