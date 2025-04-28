@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
@@ -12,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
 import AppointmentForm from "@/components/forms/appointment-form";
 import { apiRequest } from "@/lib/queryClient";
+import type { Appointment } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Appointments() {
@@ -19,13 +21,13 @@ export default function Appointments() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const { data: user, isLoading: isUserLoading } = useQuery({
+  const { data: userData, isLoading: isUserLoading } = useQuery<{id: number}>({
     queryKey: ['/api/users/1'],
   });
   
-  const { data: appointments, isLoading: isAppointmentsLoading } = useQuery({
+  const { data: appointments, isLoading: isAppointmentsLoading } = useQuery<Appointment[]>({
     queryKey: ['/api/users/1/appointments'],
-    enabled: !!user,
+    enabled: !!userData,
   });
   
   const completeAppointmentMutation = useMutation({
@@ -50,7 +52,7 @@ export default function Appointments() {
     },
   });
   
-  const isLoading = isUserLoading || isAppointmentsLoading;
+  const isLoading = isAppointmentsLoading;
   
   if (isLoading) {
     return <Skeleton className="bg-white rounded-xl shadow-soft h-72 w-full mb-8" />;
@@ -83,7 +85,7 @@ export default function Appointments() {
               <DialogTitle>Add New Appointment</DialogTitle>
             </DialogHeader>
             <AppointmentForm 
-              userId={user?.id} 
+              userId={userData?.id} 
               onSuccess={() => setDialogOpen(false)} 
             />
           </DialogContent>

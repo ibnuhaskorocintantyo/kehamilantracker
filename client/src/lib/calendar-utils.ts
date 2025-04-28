@@ -64,6 +64,8 @@ export function isPeriodDay(date: Date, cycles: Cycle[]): boolean {
   });
 }
 
+
+
 // Calculate if a date is an ovulation day
 export function isOvulationDay(date: Date, fertilityData: FertilityData[]): boolean {
   if (!fertilityData || fertilityData.length === 0) return false;
@@ -71,9 +73,10 @@ export function isOvulationDay(date: Date, fertilityData: FertilityData[]): bool
   const dateStr = format(date, 'yyyy-MM-dd');
   
   return fertilityData.some(data => {
+    // Handling the date property appropriately
     const dataDate = typeof data.date === 'string' 
       ? parseISO(data.date) 
-      : parseISO(data.date.toString());
+      : new Date(data.date); // Treat date as a Date if it's not a string
     
     return (
       format(dataDate, 'yyyy-MM-dd') === dateStr && 

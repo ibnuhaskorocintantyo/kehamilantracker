@@ -199,7 +199,7 @@ export default function JournalForm({ userId, pregnancyWeek, onSuccess }: Journa
                 <FormLabel>Entry Type</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value || undefined}
                 >
                   <FormControl>
                     <SelectTrigger>

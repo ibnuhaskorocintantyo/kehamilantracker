@@ -162,8 +162,8 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deleteCycle(id: number): Promise<boolean> {
-    const result = await db.delete(cycles).where(eq(cycles.id, id));
-    return result.count > 0;
+    const result = await db.delete(cycles).where(eq(cycles.id, id)).returning();
+    return result.length > 0;
   }
   
   async getFertilityData(userId: number): Promise<FertilityData[]> {
@@ -198,8 +198,8 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deleteFertilityData(id: number): Promise<boolean> {
-    const result = await db.delete(fertilityData).where(eq(fertilityData.id, id));
-    return result.count > 0;
+    const result = await db.delete(fertilityData).where(eq(fertilityData.id, id)).returning();
+    return result.length > 0;
   }
   
   async getAppointments(userId: number): Promise<Appointment[]> {
@@ -226,8 +226,8 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deleteAppointment(id: number): Promise<boolean> {
-    const result = await db.delete(appointments).where(eq(appointments.id, id));
-    return result.count > 0;
+    const result = await db.delete(appointments).where(eq(appointments.id, id)).returning();
+    return result.length > 0;
   }
   
   async getJournalEntries(userId: number): Promise<JournalEntry[]> {
@@ -254,8 +254,8 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deleteJournalEntry(id: number): Promise<boolean> {
-    const result = await db.delete(journalEntries).where(eq(journalEntries.id, id));
-    return result.count > 0;
+    const result = await db.delete(journalEntries).where(eq(journalEntries.id, id)).returning();
+    return result.length > 0;
   }
   
   async getHealthData(userId: number): Promise<HealthData[]> {
@@ -288,8 +288,8 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deleteHealthData(id: number): Promise<boolean> {
-    const result = await db.delete(healthData).where(eq(healthData.id, id));
-    return result.count > 0;
+    const result = await db.delete(healthData).where(eq(healthData.id, id)).returning();
+    return result.length > 0;
   }
   
   async getResources(): Promise<Resource[]> {
@@ -316,8 +316,8 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deleteResource(id: number): Promise<boolean> {
-    const result = await db.delete(resources).where(eq(resources.id, id));
-    return result.count > 0;
+    const result = await db.delete(resources).where(eq(resources.id, id)).returning();
+    return result.length > 0;
   }
   
   async getMedicalRecords(userId: number): Promise<MedicalRecord[]> {
@@ -344,8 +344,8 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deleteMedicalRecord(id: number): Promise<boolean> {
-    const result = await db.delete(medicalRecords).where(eq(medicalRecords.id, id));
-    return result.count > 0;
+    const result = await db.delete(medicalRecords).where(eq(medicalRecords.id, id)).returning();
+    return result.length > 0;
   }
 }
 

@@ -86,12 +86,12 @@ export async function analyzeSentiment(text: string): Promise<{
   }
 }
 
-export async function generateHealthTips(category: string, pregnancyWeek?: number): Promise<string[]> {
+export async function generateHealthTips(category: 'hydration' | 'sleep' | 'exercise' | 'nutrition', pregnancyWeek?: number): Promise<string[]> {
   try {
     // In a real implementation, this would call the OpenAI API
     // For this demo, we'll return static responses
     
-    const healthTips = {
+    const healthTips: { [key: string]: string[] } = {
       hydration: [
         "Start your day with a glass of water before anything else",
         "Use a marked water bottle to track your daily intake",
@@ -117,7 +117,7 @@ export async function generateHealthTips(category: string, pregnancyWeek?: numbe
         "Include omega-3 rich foods like walnuts and flaxseeds for baby's brain development"
       ]
     };
-    
+
     return healthTips[category] || [
       "Consult with your healthcare provider for personalized recommendations",
       "Keep track of your symptoms and discuss any concerns at your next appointment",

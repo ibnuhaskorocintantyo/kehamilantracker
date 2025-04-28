@@ -27,7 +27,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 
-// Extend the schema for the form
+// Define the extended schema for the form
 const formSchema = insertFertilityDataSchema.extend({
   basalBodyTemperature: z.string()
     .optional()
@@ -40,38 +40,45 @@ const formSchema = insertFertilityDataSchema.extend({
 });
 
 type FertilityFormValues = z.infer<typeof formSchema>;
+interface FertilityData {
+  id: number;
+  userId: number;
+  date: string;
+  basalBodyTemperature?: string;
+  cervicalMucus?: string;
+  ovulationTestResult?: boolean;
+  notes?: string;
+}
 
 interface CycleFormProps {
+  userId: number;
   date: Date;
   onSuccess?: () => void;
 }
 
-export default function CycleForm({ date, onSuccess }: CycleFormProps) {
+export default function CycleForm({ userId, date, onSuccess }: CycleFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Get the user
   const { data: user } = useQuery({
     queryKey: ['/api/users/1'],
   });
   
-  // Check if there's existing data for this date
   const formattedDate = date.toISOString().split('T')[0];
-  const { data: fertilityDataList } = useQuery({
+  const { data: fertilityDataList } = useQuery<FertilityData[]>({
     queryKey: ['/api/users/1/fertility-data'],
     enabled: !!user,
   });
-  
+
   const existingData = fertilityDataList?.find(
-    data => data.date.toString().split('T')[0] === formattedDate
+    (data) => data.date.split('T')[0] === formattedDate
   );
-  
-  // Set up form with default values
+
   const form = useForm<FertilityFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: user?.id || 1,
-      date: date,
+      userId: userId|| 1,
+      date: formattedDate,
       basalBodyTemperature: existingData?.basalBodyTemperature || "",
       cervicalMucus: existingData?.cervicalMucus || "",
       ovulationTestResult: existingData?.ovulationTestResult || false,
@@ -79,14 +86,12 @@ export default function CycleForm({ date, onSuccess }: CycleFormProps) {
     },
   });
   
-  // Mutation for creating/updating fertility data
   const mutation = useMutation({
     mutationFn: async (values: FertilityFormValues) => {
-      if (existingData) {
-        return await apiRequest("PATCH", `/api/fertility-data/${existingData.id}`, values);
-      } else {
-        return await apiRequest("POST", "/api/fertility-data", values);
-      }
+      const requestUrl = existingData
+        ? `/api/fertility-data/${existingData.id}`
+        : "/api/fertility-data"; 
+      return apiRequest(existingData ? "PATCH" : "POST", requestUrl, values);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/users/1/fertility-data'] });
@@ -111,7 +116,7 @@ export default function CycleForm({ date, onSuccess }: CycleFormProps) {
   function onSubmit(values: FertilityFormValues) {
     mutation.mutate(values);
   }
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

@@ -1,111 +1,137 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader, 
+  DialogTitle,
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/utils";
+import AppointmentForm from "@/components/forms/appointment-form";
+import { apiRequest } from "@/lib/queryClient";
+import type { Appointment } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 
-type HealthCategory = {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  background: string;
-  value: number;
-};
+export default function Appointments() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-export default function HealthInsights() {
-  const { data: user, isLoading: isUserLoading } = useQuery({
+  const { data: userData, isLoading: isUserLoading } = useQuery<{id: number}>({ //Type added here
     queryKey: ['/api/users/1'],
   });
-  
-  const { data: healthData, isLoading: isHealthDataLoading } = useQuery({
-    queryKey: ['/api/users/1/health-data'],
-    enabled: !!user,
+
+  const { data: appointments, isLoading: isAppointmentsLoading } = useQuery<Appointment[]>({
+    queryKey: ['/api/users/1/appointments'],
+    enabled: !!userData,
   });
-  
-  const isLoading = isUserLoading || isHealthDataLoading;
-  
+
+  const completeAppointmentMutation = useMutation({
+    mutationFn: async (appointmentId: number) => {
+      return await apiRequest("PATCH", `/api/appointments/${appointmentId}`, {
+        completed: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/users/1/appointments'] });
+      toast({
+        title: "Appointment completed",
+        description: "The appointment has been marked as completed.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update appointment status.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const isLoading = isAppointmentsLoading;
+
   if (isLoading) {
     return <Skeleton className="bg-white rounded-xl shadow-soft h-72 w-full mb-8" />;
   }
-  
-  // Format health data into categories with descriptions
-  const categories: HealthCategory[] = [
-    {
-      id: 'hydration',
-      title: 'Hydration',
-      description: 'Aim for 10-12 glasses of water daily. Staying hydrated helps maintain amniotic fluid levels.',
-      icon: 'water-flash-line',
-      background: 'bg-primary-light',
-      value: 0
-    },
-    {
-      id: 'sleep',
-      title: 'Sleep',
-      description: 'Try sleeping on your left side to improve circulation to your baby.',
-      icon: 'rest-time-line',
-      background: 'bg-secondary-light',
-      value: 0
-    },
-    {
-      id: 'exercise',
-      title: 'Exercise',
-      description: 'Gentle activities like prenatal yoga and walking are beneficial during the second trimester.',
-      icon: 'heart-pulse-line',
-      background: 'bg-accent-light',
-      value: 0
-    },
-    {
-      id: 'nutrition',
-      title: 'Nutrition',
-      description: 'Focus on iron-rich foods this week to support your baby\'s growing needs.',
-      icon: 'nutrition-line',
-      background: 'bg-status-success',
-      value: 0
-    }
-  ];
-  
-  // Update values from health data if available
-  if (healthData && healthData.length > 0) {
-    // Group by category and get latest entry for each
-    const latestByCategory = healthData.reduce((acc, item) => {
-      if (!acc[item.category] || new Date(item.date) > new Date(acc[item.category].date)) {
-        acc[item.category] = item;
-      }
-      return acc;
-    }, {});
-    
-    // Update category values
-    categories.forEach(category => {
-      if (latestByCategory[category.id]) {
-        category.value = latestByCategory[category.id].value;
-      }
-    });
-  }
-  
+
+  const upcomingAppointments = appointments && appointments.length > 0
+    ? appointments.filter(a => !a.completed).slice(0, 3)
+    : [];
+
+  const handleMarkComplete = (appointmentId: number) => {
+    completeAppointmentMutation.mutate(appointmentId);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="font-lora text-xl font-medium text-neutral-dark">Health Insights & Recommendations</h3>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-lora text-xl font-medium text-neutral-dark">Upcoming Appointments</h3>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              variant="ghost" 
+              className="text-primary text-sm font-medium"
+            >
+              <i className="ri-add-line mr-1"></i>
+              Add New
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Appointment</DialogTitle>
+            </DialogHeader>
+            <AppointmentForm 
+              userId={userData?.id} 
+              onSuccess={() => setDialogOpen(false)} 
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        {categories.map(category => (
-          <div key={category.id} className={`${category.background} p-5 rounded-lg`}>
-            <div className="flex items-start">
-              <div className="bg-white p-2 rounded-full mr-3">
-                <i className={`ri-${category.icon} text-primary-dark text-lg`}></i>
+      <div className="space-y-4">
+        {upcomingAppointments.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-neutral-medium">No upcoming appointments</p>
+            <p className="text-sm text-neutral-medium mt-2">Click "Add New" to schedule an appointment</p>
+          </div>
+        ) : (
+          upcomingAppointments.map(appointment => (
+            <div key={appointment.id} className="border border-neutral-light rounded-lg p-4">
+              <div className="flex items-center mb-2">
+                <span className={`w-8 h-8 ${
+                  appointment.type === 'Wellness' ? 'bg-secondary-light' : 'bg-primary-light'
+                } rounded-full flex items-center justify-center mr-3`}>
+                  <i className={`ri-${appointment.icon} text-primary-dark`}></i>
+                </span>
+                <div>
+                  <h4 className="font-medium text-neutral-dark">{appointment.title}</h4>
+                  <p className="text-xs text-neutral-medium">{appointment.provider}</p>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="ml-auto"
+                  onClick={() => handleMarkComplete(appointment.id)}
+                >
+                  <i className="ri-check-line text-green-500"></i>
+                </Button>
               </div>
-              <div>
-                <h4 className="font-medium mb-1">{category.title}</h4>
-                <p className="text-sm">{category.description}</p>
-                <div className="mt-3 flex items-center">
-                  <div className="progress-bar w-full h-2 mr-2">
-                    <div className="progress-value" style={{ width: `${category.value}%` }}></div>
-                  </div>
-                  <span className="text-xs font-medium">{category.value}%</span>
+              <div className="flex mt-2">
+                <div className="flex items-center mr-4">
+                  <i className="ri-calendar-line text-primary-dark mr-1 text-sm"></i>
+                  <span className="text-xs">{formatDate(appointment.date)}</span>
+                </div>
+                <div className="flex items-center">
+                  <i className="ri-time-line text-primary-dark mr-1 text-sm"></i>
+                  <span className="text-xs">{appointment.time}</span>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

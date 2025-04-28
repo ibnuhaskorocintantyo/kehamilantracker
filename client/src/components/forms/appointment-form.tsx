@@ -59,7 +59,7 @@ interface AppointmentFormProps {
 export default function AppointmentForm({ userId, onSuccess }: AppointmentFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   // Set up form with default values
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(formSchema),
@@ -76,15 +76,15 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
       icon: "stethoscope-line",
     },
   });
-  
+
   // Update icon when type changes
   const watchType = form.watch("type");
-  
+
   const selectedTypeIcon = appointmentTypes.find(t => t.value === watchType)?.icon || "stethoscope-line";
-  
+
   // Set the icon whenever type changes
   form.setValue("icon", selectedTypeIcon);
-  
+
   // Mutation for creating appointment
   const mutation = useMutation({
     mutationFn: async (values: AppointmentFormValues) => {
@@ -106,11 +106,11 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
       });
     },
   });
-  
+
   function onSubmit(values: AppointmentFormValues) {
     mutation.mutate(values);
   }
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -127,7 +127,7 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="type"
@@ -136,7 +136,7 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
               <FormLabel>Appointment Type</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                defaultValue={field.value || undefined}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -158,7 +158,7 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="provider"
@@ -166,13 +166,13 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
             <FormItem>
               <FormLabel>Provider/Doctor</FormLabel>
               <FormControl>
-                <Input placeholder="Dr. Name" {...field} />
+                <Input placeholder="Dr. Name" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -212,7 +212,7 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="time"
@@ -227,7 +227,7 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
             )}
           />
         </div>
-        
+
         <FormField
           control={form.control}
           name="location"
@@ -235,13 +235,13 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <Input placeholder="Clinic or hospital address" {...field} />
+                <Input placeholder="Clinic or hospital address" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="notes"
@@ -252,13 +252,14 @@ export default function AppointmentForm({ userId, onSuccess }: AppointmentFormPr
                 <Textarea
                   placeholder="Additional notes about the appointment..."
                   {...field}
+                  value={field.value || ''}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <Button 
           type="submit" 
           className="w-full"
